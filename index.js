@@ -5,16 +5,24 @@ fs.readdir(process.cwd(), (err, filenames) => {
     if(err){
         console.log(err)
     }
-
-    // BAD CODE!!
+    const allStats = Array(filenames.length).fill(null)
     for (filename of filenames) {
+        const index = filenames.indexOf(filename)
         fs.lstat(filename, (err, stats) => {
             if(err) {
                 console.log(err)
             }
-            console.log(filename, stats.isFile())
+
+            allStats[index] = stats
+
+            const ready = allStats.every((stats) => {
+                return stats
+            })
+            if(ready) {
+                allStats.forEach((stats, index) => {
+                    console.log(filenames[index], stats.isFile())
+                })
+            }
         })
     }
-    // BAD CODE COMPLETE
-    console.log(filenames)
 })
